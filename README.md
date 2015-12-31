@@ -15,7 +15,7 @@ To modify the repo:
 	- make desired changes to requirements.txt or Dockerfile (note: changes to apt-get or pip installs will trigger a full rebuild, otherwise it will use the cache. A full rebuild is very, very slow.). 
    - To modify content: 
         - option 1: modify content by checking out repo locally and adding contents to /notebooks (will require same steps of sshing into host and rebuilding/running image)
-        - option 2: login to kadatasci.ml and add your own notebooks to jupyterhub_bq/notebooks (files created and edited from the jupyterhub environment will be saved to disk on the host instance). If you go with this option, you can ignore the remaining steps.
+        - option 2: login to kadatasci.ml and add your own notebooks to jupyterhub_bq/notebooks (files created and edited from the jupyterhub environment will be saved to disk on the host instance). If you go with this option, you can ignore the remaining steps (all changes will be auto-committed, but not pushed)
 2. In the root of the repo, rebuild the docker image:
    - docker build -t amyskerry/jupyterhub .
 3. Run a docker container with the newly built image (binding port 80 to 8000, and mounting host directory so that files edited in opt/shared_nbs persist on the host independent of the container)
