@@ -34,7 +34,7 @@
 
 REMOTE=""
 BRANCH=""
-SLEEP_TIME=2
+SLEEP_TIME=60
 DATE_FMT="+%Y-%m-%d %H:%M:%S"
 COMMITMSG="Scripted auto-commit on change (%d) by gitwatch.sh"
 
@@ -106,6 +106,9 @@ do
 done
 
 shift $((OPTIND-1)) # Shift the input arguments, so that the input file (last arg) is $1 in the code below
+
+echo "gitwatch is watching for changes to:"
+echo $1
 
 if [ $# -ne 1 ]; then # If no command line arguments are left (that's bad: no target was passed)
     shelp # print usage help
