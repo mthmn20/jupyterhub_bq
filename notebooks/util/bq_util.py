@@ -109,6 +109,10 @@ def list_files_in_gcs_bucket(client, gspath):
              f.name.endswith('.json') or f.name.endswith('.txt')]
     return files
 
+def query_to_df(query, bq=None):
+    """Execute query and return result as a pandas dataframe."""
+    result = exec_and_return(query, bq)
+    return result.rows
 
 def get_authed_clients():
     """Return authenticated clients for BigQuery and GCS."""
