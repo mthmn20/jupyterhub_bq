@@ -1,2 +1,7 @@
 gitwatch is watching for changes to:
 .
+[master 0419f8d] Scripted auto-commit on change (2016-01-03 19:18:04) by gitwatch.sh
+ 3 files changed, 1274 insertions(+)
+ create mode 100644 nohup.out
+ create mode 100644 notebooks/Demo.ipynb
+ create mode 100644 notebooks/util/.~bq_util.py
