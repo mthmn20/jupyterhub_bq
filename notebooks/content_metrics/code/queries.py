@@ -317,7 +317,6 @@ def create_request_logs_visit_query(
         query = """
             SELECT
               content_area,
-              sum(learning_events)/sum(events) as prop_visits_learning,
               sum(num_sessions) as num_sessions,
               EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
               "all" as  content_type,
@@ -351,7 +350,6 @@ def construct_device_breakdown_query(comparisons=cfg.COMPARISON_NODES):
               language,
               device_type,
               "all" as content_type,
-              sum(learning_events)/sum(events) as prop_visits_learning,
               sum(num_sessions) as num_sessions,
             FROM(
             SELECT

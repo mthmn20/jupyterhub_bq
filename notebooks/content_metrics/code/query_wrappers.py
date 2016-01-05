@@ -18,14 +18,14 @@ def query_to_df(query, bq=None):
     return result.rows
 
 
-def fetch_all_dashboard_data(bq=None):
+def fetch_all_dashboard_data(bq=None, bust_cache=True):
     """Fetch all data needed to support the content metrics dashboard and
        reports (from intermediate tables in BigQuery."""
     content_production = query_to_df(query_dict['production_queries'], bq)
     yt_logs = query_to_df(query_dict['yt_logs_query'], bq)
     request_logs_breakdown, request_logs_device = get_request_log_dfs()
     usage_dfs = get_usage_dfs(bq)
-    new_learner_df = get_new_learners_this_month(bq)
+    new_learner_df = get_new_learners_this_month(bq, bust_cache)
     content_added, added_timecourse, total_content, total_timecourse = (
         construct_production_data(content_production))
     data = {}

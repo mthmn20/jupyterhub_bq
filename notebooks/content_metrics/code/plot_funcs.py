@@ -1,5 +1,9 @@
 """Module containing simple plotting wrappers for content metrics dashboard."""
 
+import sys
+sys.path.append("../..")
+from util import viz
+
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -78,10 +82,22 @@ def make_yt_plot(yt_logs):
 
 def plot_completion(usage_dfs, plot_state):
     """Plot stats on completion percentages for current month snapshot."""
-    f, axes = plt.subplots(1, figsize=[8, 5])
-    print "TODO: plot completion stats"
+    clear_output()
+    f, axes = plt.subplots(2, 1, figsize=[8, 5])
+    for i, content_type in enumerate(["video", "exercise"]):
+        df = usage_dfs["%s_usage" % content_type]
+        df = df[(df["date"] > "2014-01-01") & (
+            df["Content Area"].isin(plot_state["comparisons"]))]
+        df = df.groupby(["Content Area", "date"]).mean()["avg_prop_completed"]
+        df.unstack("Content Area").plot(ax=axes[i])
+        axes[i].set_ylim([0,1])
+        axes[i].set_title(content_type)
+        axes[i].set_ylabel("%s completion stats" % content_type)
+        axes[i].legend(loc=[1, .5])
+        axes[i].set_xlabel("")
+        sns.despine()
 
-    
+        
 def plot_new_learner_props(plotdf):
     f, ax = plt.subplots(figsize=[8, 4])
     colors1 = [list(COLOR_MAP[c]) + [.1] for c in plotdf.index]
@@ -92,7 +108,10 @@ def plot_new_learner_props(plotdf):
         kind="bar", color=colors2, ax=ax)
     plotdf["returning_last_month"].plot(kind="bar", color=colors3, ax=ax)
     ax.set_ylabel("Number of Learners")
-    ax.set_title("New learners: LIGHT; Returning all time: MEDIUM, Returning last month: DARK")
+    d = {"New learners": colors1[0],
+         "Returning all time": colors2[0],
+         "Returning last month": colors3[0]}
+    viz.add_legend(d)
     sns.despine()
 
     

@@ -27,8 +27,8 @@ def create_export(filename, csv_output, download_text="DOWNLOAD_READY"):
     try:
         data_uri = 'data:application/csv;charset=utf-8,' + urllib.quote(
             csv_output)
-        string = "<a content_type='text/csv' href='%s' download='%s'> "
-        "<h2>%s</h2> </a>" % (data_uri, filename, download_text)
+        string = """<a content_type='text/csv' href='%s' download='%s'>
+                    <h2>%s</h2> </a>""" % (data_uri, filename, download_text)
     except Exception as e:
         string = "Error occurred producing download link: %s" % e
     return string
