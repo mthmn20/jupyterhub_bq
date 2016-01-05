@@ -7,3 +7,6 @@ gitwatch is watching for changes to:
  create mode 100644 notebooks/util/.~bq_util.py
 [master 4f72c16] Scripted auto-commit on change (2016-01-04 19:22:01) by gitwatch.sh
  1 file changed, 5 insertions(+)
+[master ee54296] Scripted auto-commit on change (2016-01-05 15:35:54) by gitwatch.sh
+ 2 files changed, 167 insertions(+)
+ create mode 100644 notebooks/content_metrics/code/.~config.py
