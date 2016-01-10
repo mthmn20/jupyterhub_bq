@@ -214,32 +214,6 @@ def construct_core_academic_query(core_subjects):
     return query
 
 
-def construct_returning_learner_query(last_month=False):
-    if last_month:
-        last_month_date = (datetime.datetime(CURR_YEAR, CURR_MONTH, 1) -
-                           datetime.timedelta(days=1))
-        month = last_month_date.month
-        year = last_month_date.year
-        where_clause = "WHERE month == %s AND year == %s" % (month, year)
-    else:
-        where_clause = "WHERE month <= %s OR year <= %s" % (CURR_MONTH,
-                                                            CURR_YEAR)
-    query = """
-    SELECT
-        kaid
-    FROM
-        content_metrics.learning_log_article,
-        content_metrics.learning_log_exercise,
-        content_metrics.learning_log_video,
-        content_metrics.learning_log_scratchpad,
-        content_metrics.learning_log_talkthrough,
-    %s
-    GROUP BY kaid
-    """ % where_clause
-    
-    return query
-
-
 def construct_new_learner_query(content_type, node_data, last_month=False):
     """Construct query to pull new learners relative to existing learners,
     here existing is defined either as all time or as from previous month."""

@@ -28,6 +28,8 @@ def plot_timecourse(
     plotdf = df.groupby(["Content Area", "date"]).mean().unstack(
         "Content Area")[column]
     colors = [COLOR_MAP[node] for node in plotdf.columns.values]
+    if len(colors) == 1:
+        colors = colors[0]
     plotdf.plot(kind=kind, ax=ax, color=colors)
     ax.legend(loc=[1, .2])
     ax.set_title(title)
@@ -46,6 +48,8 @@ def plot_yoy_growth(yoy_growth, column, ax=None):
         f, ax = plt.subplots(figsize=[10, 3])
     comparisons = [c[1] for c in yoy_growth.columns.values]
     colors = [COLOR_MAP[node] for node in comparisons]
+    if len(colors) == 1:
+        colors = colors[0]
     yoy_growth["yoy_growth"].plot(kind="bar", ax=ax, color=colors)
     sns.despine()
     ax.set_ylabel("Percent YoY Growth")
@@ -60,8 +64,9 @@ def plot_youtube_snapshot(yt_logs, column, ax):
         ['content_area', "product"]).mean()[[column]].unstack(
             "product").loc[NODES]
     temp["total"] = temp.sum(axis=1)
+    kaindex = list(temp.columns.levels[1].values).index("KA")
     totals = temp.values[:, 2]
-    kas = temp.values[:, 1]
+    kas = temp.values[:, kaindex]
     ax.bar(range(len(totals)), [i / 1000000 for i in totals], color=[
         c + (.1,) for c in COLORS])
     ax.bar(range(len(kas)), [i / 1000000 for i in kas], color=COLORS)
@@ -90,7 +95,7 @@ def plot_completion(usage_dfs, plot_state):
             df["Content Area"].isin(plot_state["comparisons"]))]
         df = df.groupby(["Content Area", "date"]).mean()["avg_prop_completed"]
         df.unstack("Content Area").plot(ax=axes[i])
-        axes[i].set_ylim([0,1])
+        axes[i].set_ylim([0, 1])
         axes[i].set_title(content_type)
         axes[i].set_ylabel("%s completion stats" % content_type)
         axes[i].legend(loc=[1, .5])
@@ -122,6 +127,8 @@ def plot_visitors(df, comparisons, content_type):
     df = df.rename(columns={"num_sessions": "Number of Sessions",
                             "num_visitors": "Number of Visitors"})
     colors = [COLOR_MAP[c] for c in comparisons]
+    if len(colors) == 1:
+        colors = colors[0]
     df.T.plot(kind="bar", color=colors)
     sns.despine()
     return
