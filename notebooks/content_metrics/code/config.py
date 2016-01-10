@@ -4,11 +4,6 @@ math, adding a new core academic subject, etc.) can be updated here. """
 
 import seaborn as sns
 
-# subjects considered "Core Academic Subjects"
-CORE_ACADEMIC_SUBJECTS = ["HS Math", "MS Math", "ES Math", "Chemistry",
-                          "Biology", "Physics", "History",
-                          "Economics & Finance", "EE"]
-
 # This will be used to calculate stats for each node in the dict
 # Each node corresponds to a domain, subject or list of subjects
 COMPARISON_NODES = {
@@ -92,7 +87,10 @@ SUMMARY_NODE = {"Core Academic": {"subject_list":
                                    "electrical-engineering",
                                    "organic-chemistry",
                                    "history",
-                                   "economics-and-finance",
+                                   "microeconomics",
+                                   "macroeconomics",
+                                   "core-finance",
+                                   "entrepreneurship2",
                                    'cc-sixth-grade-math',
                                    'cc-fifth-grade-math',
                                    'cc-fourth-grade-math',
