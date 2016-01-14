@@ -123,12 +123,12 @@ def save_locally(dataframe_dict, usage_dfs, localdir="local_data"):
         os.mkdir(localdir)
     for name, df in dataframe_dict.iteritems():
         filename = os.path.join(localdir, name + ".csv")
-        df.to_csv(filename, index=False)
+        df.to_csv(filename, index=False, encoding="utf8")
     with open(os.path.join(localdir, "usage_keys.json"), "w") as f:
         json.dump(usage_dfs.keys(), f)
     for name, df in usage_dfs.iteritems():
         filename = os.path.join(localdir, name + ".csv")
-        df.to_csv(filename, index=False)
+        df.to_csv(filename, index=False, encoding="utf8")
 
         
 def load_locally(localdir="local_data"):
