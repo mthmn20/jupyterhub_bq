@@ -30,7 +30,7 @@ def _get_dates(all_time_start="2014-05-01"):
         last_month.year, last_month.month, 1).strftime("%Y-%m-%d")
     latest_month_end = datetime.datetime(
         last_month.year, last_month.month, 30).strftime("%Y-%m-%d")
-    all_time_start_date = datetime.datetime(all_time_start, "%Y-%m-d")
+    all_time_start_date = datetime.datetime.strptime(all_time_start, "%Y-%m-d")
     return latest_month_start, latest_month_end, last_month.year, last_month.month, all_time_start, all_time_start_date.month, all_time_start_date.year
 
 # Create constants available to rest of the query module.
