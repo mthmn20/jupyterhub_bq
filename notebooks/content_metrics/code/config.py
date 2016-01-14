@@ -74,7 +74,7 @@ COMPARISON_NODES = {
     "Computer Programming": {"subject": "computer-programming"},
     "Computer Science": {"subject": "computer-science"},
     "Economics & Finance": {"domain": "economics-finance-domain"},
-    "College Admissions": {"subject": "college-admissions"},
+    "College Admissions": {"domain": "college-admissions"},
     "Health and Medicine": {"subject": "health-and-medicine"},
     "Pixar": {"subject": "pixar"}
 }
