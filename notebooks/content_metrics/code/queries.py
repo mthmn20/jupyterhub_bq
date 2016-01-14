@@ -251,38 +251,61 @@ def construct_new_learner_query(content_type, node_data, last_month=False):
     return query
 
 
-def create_request_logs_visit_query(comparisons=cfg.COMPARISON_NODES):
+def create_request_logs_visit_query(comparisons=cfg.COMPARISON_NODES, total=False):
     """Construct query to pull number of visitors by area."""
     case_statement = _create_case_statement(comparisons)
-    query = """
-        // query for visitors
-        SELECT
-          content_type,
-          content_area,
-          EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
-        FROM(
-        SELECT
-          learning_events as events,
-          bingo_id,
-          %s,
-          CASE
-            WHEN content_type contains "article" THEN "article"
-            WHEN content_type contains "exercise" THEN "exercise"
-            WHEN content_type contains "video" THEN "video"
-            WHEN content_type contains "scratchpad" THEN "scratchpad"
-            ELSE content_type
-          END AS content_type,
-          CASE
-            WHEN content_type contains "pageview" then 0 ELSE learning_events
-          END AS learning_events,
-          user
-        FROM
-          [content_metrics.request_log_summary]
-        WHERE domain IS NOT NULL)
-        GROUP BY content_type, content_area
-        HAVING content_area IS NOT NULL
+    if not total:
+        query = """
+            // query for visitors
+            SELECT
+              content_type,
+              content_area,
+              EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
+            FROM(
+            SELECT
+              learning_events as events,
+              bingo_id,
+              %s,
+              CASE
+                WHEN content_type contains "article" THEN "article"
+                WHEN content_type contains "exercise" THEN "exercise"
+                WHEN content_type contains "video" THEN "video"
+                WHEN content_type contains "scratchpad" THEN "scratchpad"
+                ELSE content_type
+              END AS content_type,
+              CASE
+                WHEN content_type contains "pageview" then 0 ELSE learning_events
+              END AS learning_events,
+              user
+            FROM
+              [content_metrics.request_log_summary]
+            WHERE domain IS NOT NULL)
+            GROUP BY content_type, content_area
+            HAVING content_area IS NOT NULL
 
-    """ % (case_statement)
+        """ % (case_statement)
+    else:
+        query = """
+            SELECT
+              content_area,
+              EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
+              "all" as  content_type,
+            FROM(
+            SELECT
+              learning_events as events,
+              bingo_id,
+              %s,
+              CASE
+                WHEN content_type contains "pageview" then 0 ELSE learning_events
+              END AS learning_events,
+              user
+            FROM
+              [content_metrics.request_log_summary]
+            WHERE domain IS NOT NULL)
+            GROUP BY content_area
+            HAVING content_area IS NOT NULL
+        """ % (case_statement)
+        
     return query
 
 
