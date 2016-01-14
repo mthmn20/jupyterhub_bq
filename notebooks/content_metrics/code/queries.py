@@ -110,7 +110,7 @@ def construct_usage_query(comparison_nodes, kind="all"):
       //completed_one_node
     FROM
       %s)
-    WHERE (month <= %s OR year <= %s) AND (month >= %s OR year >=)
+    WHERE (month <= %s OR year <= %s) AND (month >= %s OR year >= %s)
     GROUP BY
       content_area, month, year
     HAVING
