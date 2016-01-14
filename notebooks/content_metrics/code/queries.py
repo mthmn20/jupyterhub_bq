@@ -21,7 +21,7 @@ def _create_date_intervals():
     return date_intervals
 
 
-def _get_dates(all_time_start="2014-03-01"):
+def _get_dates(all_time_start="2014-05-01"):
     """Return date constants for the dashboard."""
     today = datetime.datetime.now()
     last_month = datetime.datetime(
@@ -30,10 +30,11 @@ def _get_dates(all_time_start="2014-03-01"):
         last_month.year, last_month.month, 1).strftime("%Y-%m-%d")
     latest_month_end = datetime.datetime(
         last_month.year, last_month.month, 30).strftime("%Y-%m-%d")
-    return latest_month_start, latest_month_end, last_month.year, last_month.month, all_time_start
+    all_time_start_date = datetime.datetime(all_time_start, "%Y-%m-d")
+    return latest_month_start, latest_month_end, last_month.year, last_month.month, all_time_start, all_time_start_date.month, all_time_start_date.year
 
 # Create constants available to rest of the query module.
-LATEST_MONTH_START, LATEST_MONTH_END, CURR_YEAR, CURR_MONTH, ALL_TIME_START = _get_dates()
+LATEST_MONTH_START, LATEST_MONTH_END, CURR_YEAR, CURR_MONTH, ALL_TIME_START, ALL_TIME_START_MONTH,  ALL_TIME_START_YEAR = _get_dates()
 
 
 def _create_where_clause(comparison_data):
@@ -109,15 +110,14 @@ def construct_usage_query(comparison_nodes, kind="all"):
       //completed_one_node
     FROM
       %s)
-    WHERE month <= %s OR year <= %s
+    WHERE (month <= %s OR year <= %s) AND (month >= %s OR year >=)
     GROUP BY
       content_area, month, year
     HAVING
       content_area is not NULL
     """ % (case_statement,
            ", ".join(["content_metrics.learning_log_" + k for k in kind_list]),
-           CURR_MONTH,
-           CURR_YEAR)
+           CURR_MONTH, CURR_YEAR, ALL_TIME_START_MONTH, ALL_TIME_START_YEAR)
     return query
 
 
@@ -251,72 +251,43 @@ def construct_new_learner_query(content_type, node_data, last_month=False):
     return query
 
 
-def create_request_logs_visit_query(
-        total=False, comparisons=cfg.COMPARISON_NODES):
-    """Construct query to pull number of visitors and sessions by area."""
+def create_request_logs_visit_query(comparisons=cfg.COMPARISON_NODES):
+    """Construct query to pull number of visitors by area."""
     case_statement = _create_case_statement(comparisons)
-    if not total:
-        query = """
-            // query for visitors and sessions
-            SELECT
-              content_type,
-              content_area,
-              sum(num_sessions) as num_sessions,
-              EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
-            FROM(
-            SELECT
-              learning_events as events,
-              num_sessions,
-              bingo_id,
-              %s,
-              CASE
-                WHEN content_type contains "article" THEN "article"
-                WHEN content_type contains "exercise" THEN "exercise"
-                WHEN content_type contains "video" THEN "video"
-                WHEN content_type contains "scratchpad" THEN "scratchpad"
-                ELSE content_type
-              END AS content_type,
-              CASE
-                WHEN content_type contains "pageview" then 0 ELSE learning_events
-              END AS learning_events,
-              user
-            FROM
-              [content_metrics.request_log_summary]
-            WHERE domain IS NOT NULL)
-            GROUP BY content_type, content_area
-            HAVING content_area IS NOT NULL
+    query = """
+        // query for visitors
+        SELECT
+          content_type,
+          content_area,
+          EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
+        FROM(
+        SELECT
+          learning_events as events,
+          bingo_id,
+          %s,
+          CASE
+            WHEN content_type contains "article" THEN "article"
+            WHEN content_type contains "exercise" THEN "exercise"
+            WHEN content_type contains "video" THEN "video"
+            WHEN content_type contains "scratchpad" THEN "scratchpad"
+            ELSE content_type
+          END AS content_type,
+          CASE
+            WHEN content_type contains "pageview" then 0 ELSE learning_events
+          END AS learning_events,
+          user
+        FROM
+          [content_metrics.request_log_summary]
+        WHERE domain IS NOT NULL)
+        GROUP BY content_type, content_area
+        HAVING content_area IS NOT NULL
 
-        """ % (case_statement)
-    else:
-        query = """
-            SELECT
-              content_area,
-              sum(num_sessions) as num_sessions,
-              EXACT_COUNT_DISTINCT(bingo_id) as num_visitors,
-              "all" as  content_type,
-            FROM(
-            SELECT
-              learning_events as events,
-              num_sessions,
-              bingo_id,
-              %s,
-              CASE
-                WHEN content_type contains "pageview" then 0 ELSE learning_events
-              END AS learning_events,
-              user
-            FROM
-              [content_metrics.request_log_summary]
-            WHERE domain IS NOT NULL)
-            GROUP BY content_area
-            HAVING content_area IS NOT NULL
-
-        """ % (case_statement)
-        
+    """ % (case_statement)
     return query
 
 
 def construct_device_breakdown_query(comparisons=cfg.COMPARISON_NODES):
-    """Query to pull number of sessions broken down by language and device."""
+    """Query to pull number of learners broken down by language and device."""
     case_statement = _create_case_statement(comparisons)
     query = """
             SELECT
@@ -324,11 +295,10 @@ def construct_device_breakdown_query(comparisons=cfg.COMPARISON_NODES):
               language,
               device_type,
               "all" as content_type,
-              sum(num_sessions) as num_sessions,
+              EXACT_COUNT_DISTINCT(bingo_id) as num_users,
             FROM(
             SELECT
               learning_events as events,
-              num_sessions,
               CASE
                   WHEN language IS NULL THEN "en" ELSE language
               END as language,

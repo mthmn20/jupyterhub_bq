@@ -123,9 +123,8 @@ def plot_new_learner_props(plotdf):
 def plot_visitors(df, comparisons, content_type):
     df = df[(df["content_area"].isin(comparisons)) & (
         (df["content_type"] == content_type))]
-    df = df.groupby("content_area").mean()[["num_sessions", "num_visitors"]]
-    df = df.rename(columns={"num_sessions": "Number of Sessions",
-                            "num_visitors": "Number of Visitors"})
+    df = df.groupby("content_area").mean()[["num_visitors"]]
+    df = df.rename(columns={"num_visitors": "Number of Visitors"})
     colors = [COLOR_MAP[c] for c in comparisons]
     if len(colors) == 1:
         colors = colors[0]
