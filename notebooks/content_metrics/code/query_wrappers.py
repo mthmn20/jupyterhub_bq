@@ -42,7 +42,7 @@ def fetch_all_dashboard_data(bq=None):
 
 
 def get_request_log_dfs(bq=None):
-    """Pull data on visitors/sessions from request_logs_summary."""
+    """Pull data on visitors from request_logs_summary."""
     request_logs_type_breakdown = pd.concat(
         [query_to_df(query_dict['request_logs_type_breakdown'], bq),
          query_to_df(query_dict['core_request_logs_type_breakdown'], bq)])
