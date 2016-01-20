@@ -33,7 +33,7 @@ COMPARISON_NODES = {
     "MS Math": {"subject_list": [
             'cc-eighth-grade-math',
             'cc-seventh-grade-math',
-            'in-seventh-grade-math'
+            'in-seventh-grade-math',
             'in-eighth-grade-math',
             'fr-eigth-grade-math',
             'fr-seventh-grade-math']},
