@@ -35,8 +35,6 @@ COMPARISON_NODES = {
             'cc-seventh-grade-math',
             'in-seventh-grade-math'
             'in-eighth-grade-math',
-            'fr-eleventh-grade-math',
-            'fr-tenth-grade-math',
             'fr-eigth-grade-math',
             'fr-seventh-grade-math']},
     "HS Math": {"subject_list": [
@@ -53,6 +51,8 @@ COMPARISON_NODES = {
             'probability',
             'recreational-math',
             'trigonometry',
+            'fr-eleventh-grade-math',
+            'fr-tenth-grade-math',
             'enem']},
     "Art History": {"subject_list": [
             'art-history-basics',
