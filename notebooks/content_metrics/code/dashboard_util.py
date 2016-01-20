@@ -77,7 +77,7 @@ def create_usage_widgets(
     type_selector2 = widgets.create_toggle(
         ["articles", "talkthroughs", "scratchpads"], content_type_callback)
     plot_selector = widgets.create_toggle(
-        ["Learners", "Learning Time", "Learning Actions"],
+        ["Learners", "Learning Time", "Content Nodes Learned"],
         usage_type_callback, style="primary",
         button_width="300px", orientation="vertical")
     title = ipywidgets.HTML(

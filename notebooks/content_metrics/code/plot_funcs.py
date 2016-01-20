@@ -25,12 +25,16 @@ def plot_timecourse(
     """Plot timecourse of content production or usage."""
     if ax is None:
         f, ax = plt.subplots(figsize=[12, 4])
+    xticks = df.date.unique()
+    xticks.sort()
     plotdf = df.groupby(["Content Area", "date"]).mean().unstack(
         "Content Area")[column]
     colors = [COLOR_MAP[node] for node in plotdf.columns.values]
     if len(colors) == 1:
         colors = colors[0]
     plotdf.plot(kind=kind, ax=ax, color=colors)
+    ax.set_xticks(range(len(xticks)))
+    ax.set_xticklabels(xticks, rotation=90)
     ax.legend(loc=[1, .2])
     ax.set_title(title)
     ax.set_ylabel(yaxis)
@@ -93,14 +97,19 @@ def plot_completion(usage_dfs, plot_state):
         df = usage_dfs["%s_usage" % content_type]
         df = df[(df["date"] > "2014-01-01") & (
             df["Content Area"].isin(plot_state["comparisons"]))]
+        xticks = df.date.unique()
+        xticks.sort()
         df = df.groupby(["Content Area", "date"]).mean()["avg_prop_completed"]
         df.unstack("Content Area").plot(ax=axes[i])
         axes[i].set_ylim([0, 1])
         axes[i].set_title(content_type)
+        axes[i].set_xticks(range(len(xticks)))
+        axes[i].set_xticklabels(xticks, rotation=90)
         axes[i].set_ylabel("%s completion stats" % content_type)
         axes[i].legend(loc=[1, .5])
         axes[i].set_xlabel("")
         sns.despine()
+    plt.tight_layout()
 
         
 def plot_new_learner_props(plotdf):
