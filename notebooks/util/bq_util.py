@@ -93,12 +93,7 @@ def upload_df_to_bq(bq_service,
     """Upload pandas dataframe to bigquery table."""
     from apiclient.errors import HttpError
     import uuid
-<<<<<<< HEAD
-    import sleep
 
-=======
-    
->>>>>>> 7dd2b25dbaeb54088aa144530ad27d2018e03c10
     job_id = uuid.uuid4().hex
     rows = []
     remaining_rows = len(dataframe)
@@ -143,7 +138,7 @@ def upload_df_to_bq(bq_service,
             if insert_errors:
                 raise RuntimeError("Insertion errors: %s" % insert_errors)
 
-            sleep(1)  # Maintains the inserts "per second" rate per API
+            time.sleep(1)  # Maintains the inserts "per second" rate per API
             rows = []
     print ""
         
