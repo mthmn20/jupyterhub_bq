@@ -93,8 +93,12 @@ def upload_df_to_bq(bq_service,
     """Upload pandas dataframe to bigquery table."""
     from apiclient.errors import HttpError
     import uuid
+<<<<<<< HEAD
     import sleep
 
+=======
+    
+>>>>>>> 7dd2b25dbaeb54088aa144530ad27d2018e03c10
     job_id = uuid.uuid4().hex
     rows = []
     remaining_rows = len(dataframe)
