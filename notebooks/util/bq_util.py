@@ -82,6 +82,65 @@ def upload_files_to_gcs(client, filenames, localdir, gspath, log=False):
         bucket = client.storage_uri(components[0], "gs").get_bucket()
         new_file = bucket.new_key(destname)
         new_file.set_contents_from_filename(localname)
+
+        
+def upload_df_to_bq(bq_service,
+                    dataframe,
+                    project_id,
+                    dataset_id,
+                    table_id,
+                    chunksize=1000):
+    """Upload pandas dataframe to bigquery table."""
+    from apiclient.errors import HttpError
+    import uuid
+
+    job_id = uuid.uuid4().hex
+    rows = []
+    remaining_rows = len(dataframe)
+
+    total_rows = remaining_rows
+
+    for index, row in dataframe.reset_index(drop=True).iterrows():
+        row_dict = dict()
+        row_dict['json'] = json.loads(row.to_json(force_ascii=False,
+                                                  date_unit='s',
+                                                  date_format='iso'))
+        row_dict['insertId'] = job_id + str(index)
+        rows.append(row_dict)
+        remaining_rows -= 1
+
+        if (len(rows) % chunksize == 0) or (remaining_rows == 0):
+            print "\rStreaming Insert is {0}% Complete".format(
+                ((total_rows - remaining_rows) * 100) / total_rows)
+
+            body = {'rows': rows}
+
+            try:
+                response = bq_service.tabledata().insertAll(
+                    projectId=project_id,
+                    datasetId=dataset_id,
+                    tableId=table_id,
+                    body=body).execute()
+            except HttpError as ex:
+                raise RuntimeError("Https errors: %s" % ex)
+
+            # For streaming inserts, even if you receive a success HTTP
+            # response code, you'll need to check the insertErrors property
+            # of the response to determine if the row insertions were
+            # successful, because it's possible that BigQuery was only
+            # partially successful at inserting the rows.  See the `Success
+            # HTTP Response Codes
+            # <https://cloud.google.com/bigquery/
+            #       streaming-data-into-bigquery#troubleshooting>`__
+            # section
+
+            insert_errors = response.get('insertErrors', None)
+            if insert_errors:
+                raise RuntimeError("Insertion errors: %s" % insert_errors)
+
+            sleep(1)  # Maintains the inserts "per second" rate per API
+            rows = []
+    print ""
         
 
 def download_files_from_gcs(client, gspath, localpath=None, log=False):
