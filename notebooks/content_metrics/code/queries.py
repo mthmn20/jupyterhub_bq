@@ -28,8 +28,12 @@ def _get_dates(all_time_start="2014-05-01"):
         today.year, today.month, 1) - datetime.timedelta(days=1)
     latest_month_start = datetime.datetime(
         last_month.year, last_month.month, 1).strftime("%Y-%m-%d")
+    if last_month.month == 2:
+        last_month_day=28
+    else:
+        last_month_day=30
     latest_month_end = datetime.datetime(
-        last_month.year, last_month.month, 30).strftime("%Y-%m-%d")
+        last_month.year, last_month.month, last_month_day).strftime("%Y-%m-%d")
     all_time_start_date = datetime.datetime.strptime(all_time_start, "%Y-%m-%d")
     return latest_month_start, latest_month_end, last_month.year, last_month.month, all_time_start, all_time_start_date.month, all_time_start_date.year
 
