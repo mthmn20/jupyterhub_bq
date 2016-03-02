@@ -25,4 +25,12 @@ To modify the repo:
 6. Commit changes to git repo
 7. Changes will not go live until you ssh into the ec2 instance and build and run image there.
 
+To restart the docker image at any time:
+- to see what is running --> sudo docker ps
+- see something like:
+CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                            NAMES
+6c563e7e45af        amyskerry/jupyterhub   "tini -- jupyterhub -"   8 weeks ago         Up 8 weeks          8888/tcp, 0.0.0.0:80->8000/tcp   jupyterhub
+- restart by container id --> sudo docker restart 6c563e7e45af
+
+
 

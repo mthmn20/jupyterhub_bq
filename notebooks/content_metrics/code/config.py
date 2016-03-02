@@ -101,7 +101,7 @@ SUMMARY_NODE = {"Core Academic": {"subject_list":
                                    "art-oceania",
                                    "art-islam",
                                    "art-1010",
-                                   "art-history-for-teachers"
+                                   "art-history-for-teachers",
                                    "history",
                                    "microeconomics",
                                    "macroeconomics",
@@ -127,7 +127,7 @@ SUMMARY_NODE = {"Core Academic": {"subject_list":
                                    'in-sixth-grade-math',
                                    'cc-eighth-grade-math',
                                    'cc-seventh-grade-math',
-                                   'in-seventh-grade-math'
+                                   'in-seventh-grade-math',
                                    'in-eighth-grade-math',
                                    'fr-eleventh-grade-math',
                                    'fr-tenth-grade-math',

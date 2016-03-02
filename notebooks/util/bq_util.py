@@ -60,9 +60,35 @@ def _get_fresh_credentials(cred_type="bigquery"):
     return credentials
 
 
+def _get_saved_credentials(cred_type="bigquery"):
+    """Get a saved set of google credentials and store locally)."""
+    flow = oauth2client.client.OAuth2WebServerFlow(
+        secrets.BIGQUERY_CLIENT_ID,
+        secrets.BIGQUERY_CLIENT_SECRET,
+        'https://www.googleapis.com/auth/bigquery')
+
+    cred_path = os.path.dirname(os.path.abspath(__file__))
+    storage = oauth2client.file.Storage(
+            '%s/bigquery_credentials.dat' % cred_path)
+    credentials = storage.get()
+    if credentials is None or credentials.invalid:
+        import argparse
+        flags = (
+            argparse.ArgumentParser(parents=[oauth2client.tools.argparser])
+            .parse_args(["--noauth_local_webserver"]))
+        credentials = oauth2client.tools.run_flow(flow, storage, flags)
+
+    return credentials
+
+
 def _get_bigquery_client():
     """Return an authorized bigquery client."""
-    credentials = _get_fresh_credentials(cred_type="bigquery")
+    cred_path = os.path.dirname(os.path.realpath(__file__))
+    cred_file = os.path.join(cred_path, 'bigquery_credentials.dat')
+    if os.path.isfile(cred_file):
+        credentials = _get_saved_credentials(cred_type="bigquery")
+    else:
+        credentials = _get_fresh_credentials(cred_type="bigquery")
     http = httplib2.Http()
     http = credentials.authorize(http)
     return build('bigquery', 'v2', http=http)
