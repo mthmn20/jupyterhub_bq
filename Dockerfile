@@ -12,8 +12,3 @@ RUN mkdir /opt/shared_nbs
 ADD notebooks /opt/shared_nbs
 RUN chmod -R 777 /opt/shared_nbs
 
-# stolen from twiecki’s configuration
-ADD user_secrets /tmp/users
-ADD scripts/add_user.sh /tmp/add_user.sh
-RUN bash /tmp/add_user.sh /tmp/users
-RUN rm /tmp/add_user.sh /tmp/users
