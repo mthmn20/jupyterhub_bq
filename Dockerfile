@@ -1,4 +1,4 @@
-FROM jupyterhub/jupyterhub
+FROM python/2.7.15-stretch
 
 MAINTAINER Amy Skerry <amy.skerry@gmail.com>
 
