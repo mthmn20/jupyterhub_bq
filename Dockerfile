@@ -2,8 +2,6 @@ FROM jupyterhub/jupyterhub
 
 MAINTAINER Amy Skerry <amy.skerry@gmail.com>
 
-# Install some matplotlib dependencies
-RUN apt-get -y install libfreetype6-dev libpng-dev
 
 # Install pydata dependencies
 RUN apt-get -y build-dep python-numpy python-scipy matplotlib h5py
