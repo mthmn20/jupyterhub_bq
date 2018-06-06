@@ -1,4 +1,4 @@
-FROM jupyter/jupyterhub
+FROM jupyterhub/jupyterhub
 
 MAINTAINER Amy Skerry <amy.skerry@gmail.com>
 
