@@ -3,10 +3,10 @@ FROM jupyterhub/jupyterhub
 MAINTAINER Amy Skerry <amy.skerry@gmail.com>
 
 # Install some matplotlib dependencies
-RUN sudo apt-get -y install libfreetype6-dev libpng-dev
+RUN apt-get -y install libfreetype6-dev libpng-dev
 
 # Install pydata dependencies
-RUN sudo apt-get -y build-dep python-numpy python-scipy matplotlib h5py
+RUN apt-get -y build-dep python-numpy python-scipy matplotlib h5py
 
 # Install everything else
 ADD requirements.txt /tmp/requirements.txt
