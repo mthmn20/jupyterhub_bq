@@ -9,7 +9,7 @@ RUN apt-get -y build-dep python-numpy python-scipy matplotlib h5py
 # Install everything else
 ADD requirements.txt /tmp/requirements.txt
 RUN python2.7 -m pip install -r /tmp/requirements.txt
-RUN python3 -m pip install -r /tmp/requirements.txt
+
 
 # Set up shared folder
 RUN mkdir /opt/shared_nbs
